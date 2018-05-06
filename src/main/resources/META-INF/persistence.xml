@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+  <persistence-unit name="example2PU" transaction-type="JTA">
+    <provider>org.hibernate.ejb.HibernatePersistence</provider>
+    <jta-data-source>java:/Example2DS</jta-data-source>
+    <class>com.mycompany.mavenweb1.entity.Recipe</class>
+    <class>com.mycompany.mavenweb1.entity.Cartdb</class>
+    <class>com.mycompany.mavenweb1.entity.Employee</class>
+    <class>com.mycompany.mavenweb1.entity.Cartrecipedb</class>
+    <properties> 
+      <property name="hibernate.current_session_context_class" value="jta"/>
+      <property name="hibernate.show_sql" value="false"/>
+      <property name="show_sql" value="false"/>
+      <property name="hibernate.format_sql" value="false"/>
+    </properties>
+  </persistence-unit>
+</persistence>
