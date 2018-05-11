@@ -26,6 +26,9 @@ public class RecipieResource {
     @Inject
     private RecipieDataAccessImpl rdai;
     
+    private String clienthost="http://localhost:4200";
+           // "http://localhost:4200" "http://192.168.99.100:4201" "http://wildfly:80"
+    
     String token="token key valueadmin@admin.ruadmin male";
     String admin="admin@admin.ruadmin male";
     
@@ -40,7 +43,7 @@ public class RecipieResource {
     return Response.ok(lst).header("Content-Type", "application/json")
            // .header("Access-Control-Allow-Credentials", "true")
             .header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE")			
-            .header("Access-Control-Allow-Origin", "http://localhost:4200")
+            .header("Access-Control-Allow-Origin", this.clienthost)
         //    .header("Access-Control-Allow-Headers", "x-requested-with")
             .build();
     }
@@ -59,12 +62,15 @@ public class RecipieResource {
         if (info.equals(admin)){
             resp= this.token;
         }
-        return Response.ok("<!DOCTYPE html>")
-            .header("Authorisation ", resp)
+        return Response.ok()
+            .header("Content-Type", "text/plain")    
             .header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE")
     //        .header("Access-Control-Allow-Method", "POST")    
-            .header("Access-Control-Expose-Headers", "Authorisation")
-            .header("Access-Control-Allow-Origin", "http://localhost:4200")                
+    //        .header("Set-Cookie","key="+resp+"; secure")    
+            .header("Access-Control-Expose-Headers", "Authorization")
+            .header("Access-Control-Allow-Origin", this.clienthost) 
+      //      .header("Authorization2", resp)    
+            .header("Authorization", resp )    
             .build();              
     }
 
@@ -89,7 +95,7 @@ public class RecipieResource {
         return Response.ok().header("Content-Type", "application/json")
             .header("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS")  
             .header("Access-Control-Allow-Headers", "Content-Type, Accept, X-Requested-With")
-            .header("Access-Control-Allow-Origin", "http://localhost:4200")
+            .header("Access-Control-Allow-Origin", this.clienthost)
             .build();      
     }
     @PUT
@@ -105,13 +111,13 @@ public class RecipieResource {
                 return Response.ok().header("Content-Type", "application/json")
                  .header("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS")  
                   .header("Access-Control-Allow-Headers", "Content-Type, Accept, X-Requested-With")
-                 .header("Access-Control-Allow-Origin", "http://localhost:4200")
+                 .header("Access-Control-Allow-Origin", this.clienthost)
                  .build(); 
             } else {
             return Response.status(403).header("Content-Type", "application/json")
                  .header("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS")  
                   .header("Access-Control-Allow-Headers", "Content-Type, Accept, X-Requested-With")
-                 .header("Access-Control-Allow-Origin", "http://localhost:4200")
+                 .header("Access-Control-Allow-Origin", this.clienthost)
                  .build(); 
         }    
     }
@@ -122,7 +128,7 @@ public class RecipieResource {
         return Response.ok().header("Content-Type", "application/json")
             .header("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS")  
             .header("Access-Control-Allow-Headers", "Content-Type, Accept, X-Requested-With")
-            .header("Access-Control-Allow-Origin", "http://localhost:4200")
+            .header("Access-Control-Allow-Origin", this.clienthost)
             .build();      
     }
     @GET
@@ -140,18 +146,18 @@ public class RecipieResource {
                Cart cart=new Cart(cdb.getName(),cdb.getEmail(),cdb.getSex(),cdb.getPrice(),cdb.getOrderid());
                cart.setCart(rdai.getCartRecipiesId(cdb.getOrderid()));
                cartArr.add(cart);
-               }             
+               }              
             return Response.ok(cartArr).header("Content-Type", "application/json")
            // .header("Access-Control-Allow-Credentials", "true")
             .header("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS")			
-            .header("Access-Control-Allow-Origin", "http://localhost:4200")
+            .header("Access-Control-Allow-Origin", this.clienthost)
         //    .header("Access-Control-Allow-Headers", "x-requested-with")
             .build();   
             } else {
             return Response.status(403).header("Content-Type", "application/json")
                  .header("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS")  
                  .header("Access-Control-Allow-Headers", "Content-Type, Accept, X-Requested-With")
-                 .header("Access-Control-Allow-Origin", "http://localhost:4200")
+                 .header("Access-Control-Allow-Origin", this.clienthost)
                  .build();            
         }
     }
@@ -162,7 +168,7 @@ public class RecipieResource {
         return Response.ok().header("Content-Type", "application/json")
             .header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE")  
             .header("Access-Control-Allow-Headers", "Content-Type, Accept, X-Requested-With")
-            .header("Access-Control-Allow-Origin", "http://localhost:4200")
+            .header("Access-Control-Allow-Origin", this.clienthost)
             .build();      
     }
     
@@ -206,7 +212,7 @@ public class RecipieResource {
             .header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE")
     //        .header("Access-Control-Allow-Method", "POST")    
             .header("Access-Control-Allow-Headers", "Content-Type, Accept, X-Requested-With")
-            .header("Access-Control-Allow-Origin", "http://localhost:4200")
+            .header("Access-Control-Allow-Origin", this.clienthost)
             .build();      
     }    
 
@@ -223,13 +229,13 @@ public class RecipieResource {
                 return Response.ok().header("Content-Type", "application/json")
                  .header("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS")  
                   .header("Access-Control-Allow-Headers", "Content-Type, Accept, X-Requested-With")
-                 .header("Access-Control-Allow-Origin", "http://localhost:4200")
+                 .header("Access-Control-Allow-Origin", this.clienthost)
                  .build(); 
             } else {
             return Response.status(403).header("Content-Type", "application/json")
                  .header("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS")  
                   .header("Access-Control-Allow-Headers", "Content-Type, Accept, X-Requested-With")
-                 .header("Access-Control-Allow-Origin", "http://localhost:4200")
+                 .header("Access-Control-Allow-Origin", this.clienthost)
                  .build(); 
         }    
     }
