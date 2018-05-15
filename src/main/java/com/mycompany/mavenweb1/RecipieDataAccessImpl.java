@@ -5,6 +5,7 @@
  */
 package com.mycompany.mavenweb1;
 
+import static com.mycompany.mavenweb1.RecipieResource.base64decode;
 import com.mycompany.mavenweb1.entity.Cart;
 import com.mycompany.mavenweb1.entity.CartItem;
 import com.mycompany.mavenweb1.entity.Cartdb;
@@ -18,7 +19,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 /**
- *
+ * Обрабатывает запросы в БД
  * @author Администратор
  */
 @Stateless
@@ -26,6 +27,9 @@ public class RecipieDataAccessImpl {
     @PersistenceContext(unitName = "example2PU")
     EntityManager em;
     
+    /**
+     * Метод вызывается при запросе списка товаров.
+     */
     public List<Recipe> getRecipies () {
         List<Recipe> lst=new ArrayList<Recipe>();
         if (em != null){
@@ -34,10 +38,13 @@ public class RecipieDataAccessImpl {
         }
         return lst;
     }
-    
+
+    /**
+     * Метод вызывается при сохранении товаров из новой корзины.
+     *
+     * @param recipies - массив товаров
+     */    
     public String storeAllRecipiesDb(List<Recipe> recipies){
-     
-    //    em.getTransaction().begin(); 
         if (em != null){
             Query q = em.createQuery("Delete from Recipe recipe");
             q.executeUpdate();
@@ -45,35 +52,27 @@ public class RecipieDataAccessImpl {
                 em.persist(recp);
             }                
         }
-            
-    //    em.getTransaction().commit();
-    
-//    String result = "none";
-//    if (em != null){
-//        em.persist(rec);
-        
-     
-//        Query q = em.createQuery("select recipe from Recipe recipe where recipe.name = :name");
-//        q.setParameter("name", "Fruit");
-//        result = q.getResultList().get(0).toString();
-    
-//          Query q = em.createQuery("select employee from Employee employee where employee.name = :name");
-//  	  q.setParameter("name", "Sarah");
-//          result= q.getResultList().toString(); 
-    //      result =rec.toString();
-  //  }
         return "Database: recipies stored";        
     }
 
+    /**
+     * Метод вызывается при загрузке данных о всех заказах.
+     * @return список заказов
+     */    
     public List<Cartdb> getCarts() {
         List<Cartdb> lst=new ArrayList<Cartdb>();
         if (em != null){
-        Query q = em.createQuery("select cartdb from Cartdb cartdb");
-        lst = q.getResultList();
+           Query q = em.createQuery("select cartdb from Cartdb cartdb");
+           lst = q.getResultList();
         }
         return lst;
     }
 
+    /**
+     * Метод вызывается при сохранении данных о заказе.
+     *
+     * @param cartdb - данные о корзине
+     */   
     public String storeCartdb(Cartdb cartdb) {
         if (em != null){     
             em.persist(cartdb);           
@@ -81,12 +80,23 @@ public class RecipieDataAccessImpl {
         return "Database: cart stored";   
     }
 
+     /**
+     * Метод вызывается при сохранении товаров из корзины.
+     *
+     * @param cartRecTemp - данные о товарах в корзине
+     */   
     public String storeCartRecipedb(Cartrecipedb cartRecTemp) {
         if (em != null){     
             em.persist(cartRecTemp);           
         } 
        return "Database: recipies cart stored";  
     }
+    
+     /**
+     * Метод вызывается при загрузке данных о товарах для заказа с номером id.
+     *
+     * @param id - данные о товарах в корзине
+     */ 
     public CartItem[] getCartRecipiesId(int id){
         Query q = em.createQuery("select cartrecipedb from Cartrecipedb cartrecipedb where cartrecipedb.orderid = :orderid");
 	q.setParameter("orderid", id);
@@ -107,6 +117,11 @@ public class RecipieDataAccessImpl {
         return y;
     }
     
+     /**
+     * Метод вызывается при сохранении изменённого списка заказов администратором.
+     * Заказы удаляются из БД, если они выполнены
+     * @param carts - данные о товарах в списке
+     */     
     public String storeAllCartsDb(List<Cart> carts) {
         if (em != null){
            Query q = em.createQuery("select cartdb.orderid from Cartdb cartdb");
@@ -115,7 +130,7 @@ public class RecipieDataAccessImpl {
            
 //        Query q = em.createQuery("select cartrecipedb from Cartrecipedb cartrecipedb where cartrecipedb.orderid = :orderid");
             for (Cart cart: carts){
-                newtids.add(cart.getOrderId());
+                newtids.add(base64decode(cart.getOrderId()));  // - декодирование ID
             }
             for (Integer id: oldIds){
                 if (!newtids.contains(id)) {

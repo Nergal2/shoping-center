@@ -16,7 +16,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Администратор
  */
 @XmlRootElement
-@Entity
+@Entity //(name = "recipe")
 @Table(name = "recipe")
 public class Recipe implements Serializable {
     @Id

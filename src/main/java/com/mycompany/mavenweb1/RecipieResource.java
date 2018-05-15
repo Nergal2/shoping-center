@@ -10,15 +10,19 @@ import com.mycompany.mavenweb1.entity.CartItem;
 import com.mycompany.mavenweb1.entity.Cartdb;
 import com.mycompany.mavenweb1.entity.Cartrecipedb;
 import com.mycompany.mavenweb1.entity.Recipe;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
 import javax.ws.rs.core.Response;
+import sun.misc.BASE64Decoder;
+import sun.misc.BASE64Encoder;
 
 /**
- *
+ * Обрабатывает rest запросы
  * @author Администратор
  */
 @Path("/rest")
@@ -26,78 +30,77 @@ public class RecipieResource {
     @Inject
     private RecipieDataAccessImpl rdai;
     
-    private String clienthost="http://localhost:4200";
-           // "http://localhost:4200" "http://192.168.99.100:4201" "http://wildfly:80"
-    
+/** Шифровальщики */    
+    public static final String DEFAULT_ENCODING = "UTF-8";
+    static BASE64Encoder enc = new BASE64Encoder();
+    static BASE64Decoder dec = new BASE64Decoder();
+     
+/** Поле токен */
     String token="token key valueadmin@admin.ruadmin male";
-    String admin="admin@admin.ruadmin male";
     
+/** Поле логин и пароль */    
+    String admin="admin@admin.ruadmin male";   
+
+    /**
+     * Метод вызывается кодировании ID.
+     */     
+        public static String base64encode(Integer text) {
+        try {
+            return enc.encode(text.toString().getBytes(DEFAULT_ENCODING));
+            
+        } catch (UnsupportedEncodingException e) {
+            return null;
+        }
+    }
+        
+    /**
+     * Метод вызывается декодировании ID.
+     */ 
+    public static int base64decode(String text) {
+        try {
+            return Integer.parseInt(new String(dec.decodeBuffer(text), DEFAULT_ENCODING));
+        } catch (IOException e) {
+            return 0;
+        }
+    }
+    
+    /**
+     * Метод вызывается при запросе списка товаров.
+     */     
     @GET
     @Path("/recipies/all")
     //@Produces({MediaType.APPLICATION_JSON,MediaType.APPLICATION_XML})
     @Produces(MediaType.APPLICATION_JSON)
-//    public List<Recipe> getAllRecipies(){
-    public Response getAllRecipies(){        
+    public List<Recipe> getAllRecipies(){
         List<Recipe> lst= rdai.getRecipies(); 
-        
-    return Response.ok(lst).header("Content-Type", "application/json")
-           // .header("Access-Control-Allow-Credentials", "true")
-            .header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE")			
-            .header("Access-Control-Allow-Origin", this.clienthost)
-        //    .header("Access-Control-Allow-Headers", "x-requested-with")
-            .build();
+        return lst;
     }
     
-    @GET
-    @Path("/echo")
-    public String echo() {
-        return "smth recipie";
-    }
-    
+    /**
+     * Метод вызывается при вводе логина и пароля. Возвращает токен.
+     *
+     * @param info - логин и пароль
+     */
     @POST
     @Path("/login")
+    @Produces({MediaType.TEXT_PLAIN})
     public Response login(String info) {
         System.out.println("login with "+info);
         String resp= "";
         if (info.equals(admin)){
             resp= this.token;
         }
-        return Response.ok()
-            .header("Content-Type", "text/plain")    
-            .header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE")
-    //        .header("Access-Control-Allow-Method", "POST")    
-    //        .header("Set-Cookie","key="+resp+"; secure")    
-            .header("Access-Control-Expose-Headers", "Authorization")
-            .header("Access-Control-Allow-Origin", this.clienthost) 
-      //      .header("Authorization2", resp)    
+        return Response.ok(" ")
             .header("Authorization", resp )    
             .build();              
     }
-
-    @POST
-    @Path("/recipies/all")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces({MediaType.APPLICATION_JSON,MediaType.APPLICATION_XML})
-    public List<Recipe> storeAllRecipies(List<Recipe> recipies){
-    //    for (Recipe rec : recipies) {
-    //    System.out.println(rec.getName());
-    //    System.out.println(rec.getPrice());
-    //    }
-        
-        String s= rdai.storeAllRecipiesDb(recipies);
-        System.out.println(s);
-        return recipies;
-    }
     
-    @OPTIONS
-    @Path("/recipies/all") 
-    public Response storeAllRecipiesUpdOptions(){
-        return Response.ok().header("Content-Type", "application/json")
-            .header("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS")  
-            .header("Access-Control-Allow-Headers", "Content-Type, Accept, X-Requested-With")
-            .header("Access-Control-Allow-Origin", this.clienthost)
-            .build();      
-    }
+    /**    
+     * Метод вызывается при сохранении отредактированого списка товаров.
+     *
+     * @param tokenAuth  - токен
+     * @param recipies - список отредактированых товаров
+     */
     @PUT
     @Path("/recipies/all")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -108,79 +111,52 @@ public class RecipieResource {
             {      
            String s= rdai.storeAllRecipiesDb(recipies);
            System.out.println(s);
-                return Response.ok().header("Content-Type", "application/json")
-                 .header("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS")  
-                  .header("Access-Control-Allow-Headers", "Content-Type, Accept, X-Requested-With")
-                 .header("Access-Control-Allow-Origin", this.clienthost)
-                 .build(); 
+                return Response.ok(" ").build(); 
             } else {
-            return Response.status(403).header("Content-Type", "application/json")
-                 .header("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS")  
-                  .header("Access-Control-Allow-Headers", "Content-Type, Accept, X-Requested-With")
-                 .header("Access-Control-Allow-Origin", this.clienthost)
-                 .build(); 
+            return Response.status(403).build(); 
         }    
     }
     
-    @OPTIONS
-    @Path("/cart/all") 
-    public Response getAllCartsOptions(){
-        return Response.ok().header("Content-Type", "application/json")
-            .header("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS")  
-            .header("Access-Control-Allow-Headers", "Content-Type, Accept, X-Requested-With")
-            .header("Access-Control-Allow-Origin", this.clienthost)
-            .build();      
-    }
+     /**    
+     * Метод вызывается при получении списка заказов.
+     *
+     * @param tokenAuth  - токен
+     */
     @GET
     @Path("/cart/all")
 //    @Produces({MediaType.APPLICATION_JSON,MediaType.APPLICATION_XML})
     @Produces(MediaType.APPLICATION_JSON)
   //  public List<Cart> getAllCarts(){
-    public Response getAllCarts(@QueryParam(value="auth") String tokenAuth){
+      public Response getAllCarts(@QueryParam(value="auth") String tokenAuth){            
         System.out.println("Operation getAllCarts with key: "+tokenAuth);
         if (this.token.equals(tokenAuth)) 
-            {
+            {           
             List<Cart> cartArr= new ArrayList<Cart>();
             List<Cartdb> cartdb= rdai.getCarts();
-            for (Cartdb cdb : cartdb){            
-               Cart cart=new Cart(cdb.getName(),cdb.getEmail(),cdb.getSex(),cdb.getPrice(),cdb.getOrderid());
+            for (Cartdb cdb : cartdb){
+               String idTemp= base64encode(cdb.getOrderid());
+               
+               Cart cart=new Cart(cdb.getName(),cdb.getEmail(),cdb.getSex(),cdb.getPrice(),idTemp);
                cart.setCart(rdai.getCartRecipiesId(cdb.getOrderid()));
                cartArr.add(cart);
                }              
-            return Response.ok(cartArr).header("Content-Type", "application/json")
-           // .header("Access-Control-Allow-Credentials", "true")
-            .header("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS")			
-            .header("Access-Control-Allow-Origin", this.clienthost)
-        //    .header("Access-Control-Allow-Headers", "x-requested-with")
-            .build();   
+            return Response.ok(cartArr).build();   
             } else {
-            return Response.status(403).header("Content-Type", "application/json")
-                 .header("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS")  
-                 .header("Access-Control-Allow-Headers", "Content-Type, Accept, X-Requested-With")
-                 .header("Access-Control-Allow-Origin", this.clienthost)
-                 .build();            
+            return Response.status(403).build();            
         }
     }
-    
-    @OPTIONS
-    @Path("/cart/new") 
-    public Response storeCartOptions(){
-        return Response.ok().header("Content-Type", "application/json")
-            .header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE")  
-            .header("Access-Control-Allow-Headers", "Content-Type, Accept, X-Requested-With")
-            .header("Access-Control-Allow-Origin", this.clienthost)
-            .build();      
-    }
-    
+      
+     /**    
+     * Метод вызывается при добавлении нового заказа.
+     *
+     * @param cart  - корзина с товарами, ценой и данными о заказчике 
+     */
     @POST
     @Path("/cart/new")
     @Consumes(MediaType.APPLICATION_JSON)
-//    @Produces({MediaType.APPLICATION_JSON,MediaType.APPLICATION_XML})
     @Produces(MediaType.APPLICATION_JSON)    
-    public Response storeCart(Cart cart){    
+    public Cart storeCart(Cart cart){    
         System.out.println("Request to storeCart");
-
-        System.out.println(cart.getPrice());
         final int rnd=100 + (int) (Math.random() * 10000);  // номер заказа сгенерить
         Cartdb cartTemp= new Cartdb(); // подготовка элемента для записи в бд Cartdb
         cartTemp.setName(cart.getName());
@@ -204,18 +180,18 @@ public class RecipieResource {
             String s2= rdai.storeCartRecipedb(cartRecTemp);        
             System.out.println(cartRecTemp.getName());
         }
-        
         String s1= rdai.storeCartdb(cartTemp);        
         System.out.println(s1);
          
-        return Response.ok(cart).header("Content-Type", "application/json")
-            .header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE")
-    //        .header("Access-Control-Allow-Method", "POST")    
-            .header("Access-Control-Allow-Headers", "Content-Type, Accept, X-Requested-With")
-            .header("Access-Control-Allow-Origin", this.clienthost)
-            .build();      
+        return cart;
     }    
-
+    
+     /**    
+     * Метод вызывается при сохранении списка заказов.
+     *
+     * @param tokenAuth  - токен
+     * @param carts  - массив корзин заказов
+     */
     @PUT
     @Path("/cart/all")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -226,17 +202,9 @@ public class RecipieResource {
             {      
            String s= rdai.storeAllCartsDb(carts);
            System.out.println(s);
-                return Response.ok().header("Content-Type", "application/json")
-                 .header("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS")  
-                  .header("Access-Control-Allow-Headers", "Content-Type, Accept, X-Requested-With")
-                 .header("Access-Control-Allow-Origin", this.clienthost)
-                 .build(); 
+                return Response.ok("ok").build(); 
             } else {
-            return Response.status(403).header("Content-Type", "application/json")
-                 .header("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS")  
-                  .header("Access-Control-Allow-Headers", "Content-Type, Accept, X-Requested-With")
-                 .header("Access-Control-Allow-Origin", this.clienthost)
-                 .build(); 
+            return Response.status(403).build(); 
         }    
     }
     

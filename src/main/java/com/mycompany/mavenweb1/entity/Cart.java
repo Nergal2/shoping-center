@@ -52,11 +52,11 @@ public class Cart implements Serializable {
     private int price; 
     
     @Basic(optional = true)
-    private int orderId;
+    private String orderId;
 
     public Cart() {
     }
-    public Cart( String name,String email,String sex,int price,int orderId) {
+    public Cart( String name,String email,String sex,int price,String orderId) {
         this.name=name;
         this.email=email;
         this.sex=sex;
@@ -124,11 +124,11 @@ public class Cart implements Serializable {
         return true;
     }
 
-    public int getOrderId() {
+    public String getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(int orderId) {
+    public void setOrderId(String orderId) {
         this.orderId = orderId;
     }
     
