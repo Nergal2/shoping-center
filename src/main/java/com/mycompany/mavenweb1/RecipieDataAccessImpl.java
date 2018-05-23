@@ -17,12 +17,14 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.transaction.Transactional;
 
 /**
  * Обрабатывает запросы в БД
  * @author Администратор
  */
 @Stateless
+//@Transactional // не нужна для EJB
 public class RecipieDataAccessImpl {
     @PersistenceContext(unitName = "example2PU")
     EntityManager em;
@@ -78,18 +80,6 @@ public class RecipieDataAccessImpl {
             em.persist(cartdb);           
         }
         return "Database: cart stored";   
-    }
-
-     /**
-     * Метод вызывается при сохранении товаров из корзины.
-     *
-     * @param cartRecTemp - данные о товарах в корзине
-     */   
-    public String storeCartRecipedb(Cartrecipedb cartRecTemp) {
-        if (em != null){     
-            em.persist(cartRecTemp);           
-        } 
-       return "Database: recipies cart stored";  
     }
     
      /**

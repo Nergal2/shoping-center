@@ -6,10 +6,15 @@
 package com.mycompany.mavenweb1.entity;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -41,6 +46,11 @@ public class Cartdb implements Serializable{
     @NotNull
     @Column(name = "orderid")
     private int orderid;
+    
+    @NotNull
+    @OneToMany(targetEntity = Cartrecipedb.class, cascade = CascadeType.PERSIST)
+    
+    private Set<Cartrecipedb> cartrecipedb=new HashSet<>();
     
     public String getName() {
         return name;
@@ -85,6 +95,14 @@ public class Cartdb implements Serializable{
     public Cartdb() {
     }
     
+    public Cartdb(String name, int price, String email, String sex,int orderid) {
+        this.name=name;
+        this.price=price;
+        this.email=email;
+        this.sex=sex;
+        this.orderid=orderid;
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;
@@ -104,4 +122,12 @@ public class Cartdb implements Serializable{
         }
         return true;
     }  
+
+    public Set<Cartrecipedb> getCartrecipedb() {
+        return cartrecipedb;
+    }
+
+    public void setCartrecipedb(Set<Cartrecipedb> cartrecipedb) {
+        this.cartrecipedb = cartrecipedb;
+    }
 }

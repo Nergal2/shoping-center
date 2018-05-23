@@ -5,6 +5,7 @@
  */
 package com.mycompany.mavenweb1;
 
+import com.mycompany.logger.LoggerAnotation;
 import com.mycompany.mavenweb1.entity.Cart;
 import com.mycompany.mavenweb1.entity.CartItem;
 import com.mycompany.mavenweb1.entity.Cartdb;
@@ -17,7 +18,12 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import javax.ws.rs.core.Response;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 
@@ -30,7 +36,13 @@ public class RecipieResource {
     @Inject
     private RecipieDataAccessImpl rdai;
     
-/** Шифровальщики */    
+/** Логгер */
+    @Inject
+    @LoggerAnotation
+    private Logger logger;
+  //  private Logger logger=LogManager.getLogger();
+    
+/** Шифровальщики */
     public static final String DEFAULT_ENCODING = "UTF-8";
     static BASE64Encoder enc = new BASE64Encoder();
     static BASE64Decoder dec = new BASE64Decoder();
@@ -73,9 +85,10 @@ public class RecipieResource {
     @Produces(MediaType.APPLICATION_JSON)
     public List<Recipe> getAllRecipies(){
         List<Recipe> lst= rdai.getRecipies(); 
+        logger.log( Level.INFO, "Recipies list's been requested");
         return lst;
     }
-    
+     
     /**
      * Метод вызывается при вводе логина и пароля. Возвращает токен.
      *
@@ -85,14 +98,14 @@ public class RecipieResource {
     @Path("/login")
     @Produces({MediaType.TEXT_PLAIN})
     public Response login(String info) {
-        System.out.println("login with "+info);
+        logger.log( Level.INFO, "login with "+info);
         String resp= "";
         if (info.equals(admin)){
             resp= this.token;
         }
         return Response.ok(" ")
-            .header("Authorization", resp )    
-            .build();              
+            .header("Authorization", resp)
+            .build();
     }
     
     /**    
@@ -106,7 +119,7 @@ public class RecipieResource {
     @Consumes(MediaType.APPLICATION_JSON)
 //    @Produces(MediaType.APPLICATION_JSON)
     public Response storeAllRecipiesUpd(@QueryParam(value="auth") String tokenAuth, List<Recipe> recipies){
-        System.out.println("Operation storeAllRecipiesUpd with key: "+tokenAuth);
+        logger.log( Level.INFO, "Operation storeAllRecipiesUpd with key: "+tokenAuth);
         if (this.token.equals(tokenAuth)) 
             {      
            String s= rdai.storeAllRecipiesDb(recipies);
@@ -128,7 +141,7 @@ public class RecipieResource {
     @Produces(MediaType.APPLICATION_JSON)
   //  public List<Cart> getAllCarts(){
       public Response getAllCarts(@QueryParam(value="auth") String tokenAuth){            
-        System.out.println("Operation getAllCarts with key: "+tokenAuth);
+        logger.log( Level.INFO, "Operation getAllCarts with key: "+tokenAuth);        
         if (this.token.equals(tokenAuth)) 
             {           
             List<Cart> cartArr= new ArrayList<Cart>();
@@ -156,16 +169,14 @@ public class RecipieResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)    
     public Cart storeCart(Cart cart){    
-        System.out.println("Request to storeCart");
+        logger.log( Level.INFO, "Request to storeCart");
         final int rnd=100 + (int) (Math.random() * 10000);  // номер заказа сгенерить
-        Cartdb cartTemp= new Cartdb(); // подготовка элемента для записи в бд Cartdb
-        cartTemp.setName(cart.getName());
-        cartTemp.setPrice(cart.getPrice());
-        cartTemp.setEmail(cart.getEmail());
-        cartTemp.setSex(cart.getSex());
-        cartTemp.setOrderid(rnd);
-        
+        // подготовка элемента для записи в бд Cartdb    
+        Cartdb cartTemp= new Cartdb(cart.getName(),cart.getPrice(),cart.getEmail(),cart.getSex(),rnd);    
+    
         CartItem[] cartTempArr = cart.getCart();  // достать массив покупок
+        
+        Set<Cartrecipedb> cartRecipeTempDb = new HashSet<>();
         for (CartItem cartItemTemp: cartTempArr) {
             Cartrecipedb cartRecTemp= new Cartrecipedb(); //  подготовка элемента для записи в бд Cartrecipedb
             cartRecTemp.setOrderid(rnd);
@@ -177,9 +188,10 @@ public class RecipieResource {
             cartRecTemp.setImagepath(cartRec.getImagepath());
             cartRecTemp.setNumb(cartItemTemp.getNumb());
             
-            String s2= rdai.storeCartRecipedb(cartRecTemp);        
+            cartRecipeTempDb.add(cartRecTemp);      
             System.out.println(cartRecTemp.getName());
         }
+        cartTemp.setCartrecipedb(cartRecipeTempDb);
         String s1= rdai.storeCartdb(cartTemp);        
         System.out.println(s1);
          
@@ -197,13 +209,12 @@ public class RecipieResource {
     @Consumes(MediaType.APPLICATION_JSON)
 //    @Produces(MediaType.APPLICATION_JSON)
     public Response storeAllCarts(@QueryParam(value="auth") String tokenAuth, List<Cart> carts){
-        System.out.println("Operation storeAllCarts with key: "+tokenAuth);
-        if (this.token.equals(tokenAuth)) 
-            {      
-           String s= rdai.storeAllCartsDb(carts);
-           System.out.println(s);
-                return Response.ok("ok").build(); 
-            } else {
+        logger.log( Level.INFO, "Operation storeAllCarts with key: "+tokenAuth);
+        if (this.token.equals(tokenAuth)){      
+            String s= rdai.storeAllCartsDb(carts);
+            logger.log( Level.INFO, s);           
+            return Response.ok("ok").build(); 
+        } else {
             return Response.status(403).build(); 
         }    
     }
