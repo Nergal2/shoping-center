@@ -32,11 +32,13 @@ public class Recipe implements Serializable {
     
     @Basic(optional = false)
     @NotNull
-    @Column(name = "price")
+    @Column(name = "price")    
     private int price;
+    
     @Basic(optional = false)
     @Column(name = "description")
     private String  description; 
+    
     @Basic(optional = false)
     @Column(name = "imagepath")    
     private String imagepath;

@@ -28,5 +28,14 @@
         <servlet-name>resteasy-servlet</servlet-name>
         <url-pattern>/rest/*</url-pattern>
     </servlet-mapping>
+    
+    <welcome-file-list> 
+        <welcome-file>index.html</welcome-file>
+        <welcome-file>inline.bundle.js</welcome-file>
+        <welcome-file>polyfills.bundle.js</welcome-file>
+        <welcome-file>styles.bundle.js</welcome-file>
+        <welcome-file>vendor.bundle.js</welcome-file>
+        <welcome-file>main.bundle.js</welcome-file>
+    </welcome-file-list>
 
 </web-app>

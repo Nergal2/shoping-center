@@ -5,8 +5,6 @@
  */
 package com.mycompany.logger;
 
-//import com.mycompany.logger.LoggerAnotation;
-import javax.enterprise.inject.Default;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.InjectionPoint;
 import org.apache.logging.log4j.LogManager;

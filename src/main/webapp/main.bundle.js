@@ -343,12 +343,13 @@ var MyHeaderComponent = (function () {
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Cart; });
 var Cart = (function () {
-    function Cart(name, email, sex, cart, price) {
+    function Cart(name, email, sex, cart, price, orderId) {
         this.name = name;
         this.email = email;
         this.sex = sex;
         this.cart = cart;
         this.price = price;
+        this.orderId = orderId;
     }
     return Cart;
 }());
@@ -378,7 +379,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/orders-list/orders-list.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container-fluid\">\n  <hr>\n  <div class=\"row-fluid\">\n    <div class=\"col-xs-12\">\n      <a class=\"list-group-item clearfix\"\n        *ngFor=\"let car of carts; let i=index;\">    \n        <div class=\"row\">\n          <div class=\"col-md-5\">\n            <div class=\"list-group-item\"> \n              <p class=\"list-group-item-text\">Total price is: ${{car.price}} </p>\n              <div class=\"list-group-item\" *ngFor=\"let recloop of car.cart\">\n                <p class=\"list-group-item-text\">{{recloop.rec.name}} X {{recloop.numb}}</p>\n                <h4 class=\"list-group-item-heading\">{{recloop.rec.description}}</h4>\n                <div class=\"row\">\n                  <div class=\"col-xs-12 col-xs-offset-5\">\n                    <img [src]=\"recloop.rec.imagepath\" alt=\"{{recloop.rec.name}}\" class=\"img-responsive\"style=\"max-height: 80px;\">\n                  </div> \n                </div> \n              </div>   \n            </div> \n          </div>\n          <div class=\"col-md-7\">\n            <p class=\"list-group-item-text\">Заказал {{car.name}} </p>\n            <h4 class=\"list-group-item-text\">Который по-жизни {{car.sex}} </h4>\n            <h4 class=\"list-group-item-text\">Почта: {{car.email}} </h4>\n            <div class=\"row\">\n              <button class=\"btn btn-danger\" type=\"button\" (click)=\"removeCart(i)\">Удалить заказ</button>\n            </div>              \n          </div>\n        </div>  \n      </a>     \n    </div>   \n  </div>\n</div>"
+module.exports = "<div class=\"container-fluid\">\n  <hr>\n  <div class=\"row-fluid\">\n    <div class=\"col-xs-12\">\n      <a class=\"list-group-item clearfix\"\n        *ngFor=\"let car of carts; let i=index;\">    \n        <div class=\"row\">\n          <div class=\"col-md-5\">\n            <div class=\"list-group-item\"> \n              <p class=\"list-group-item-text\">Total price is: ${{car.price}} </p>\n              <div class=\"list-group-item\" *ngFor=\"let recloop of car.cart\">\n                <p class=\"list-group-item-text\">{{recloop.rec.name}} X {{recloop.numb}}</p>\n                <h4 class=\"list-group-item-heading\">{{recloop.rec.description}}</h4>\n                <div class=\"row\">\n                  <div class=\"col-xs-12 col-xs-offset-5\">\n                    <img [src]=\"recloop.rec.imagepath\" alt=\"{{recloop.rec.name}}\" class=\"img-responsive\"style=\"max-height: 80px;\">\n                  </div> \n                </div> \n              </div>   \n            </div> \n          </div>\n          <div class=\"col-md-7\">\n            <p class=\"list-group-item-text\">Заказал {{car.name}} </p>\n            <h4 class=\"list-group-item-text\">Который по-жизни {{car.sex}} </h4>\n            <h4 class=\"list-group-item-text\">Почта: {{car.email}} </h4>\n            <h4 class=\"list-group-item-text\">Заказ № : {{car.orderId}} </h4>\n            <div class=\"row\">\n              <button class=\"btn btn-danger\" type=\"button\" (click)=\"removeCart(i)\">Удалить заказ</button>\n            </div>              \n          </div>\n        </div>  \n      </a>     \n    </div>   \n  </div>\n</div>"
 
 /***/ }),
 
@@ -1102,10 +1103,11 @@ var SelectedrecipeService = (function () {
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AuthService; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/esm5/core.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_firebase__ = __webpack_require__("../../../../firebase/index.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_firebase___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_firebase__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_Router__ = __webpack_require__("../../../Router/esm5/router.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Selectedrecipe_Service__ = __webpack_require__("../../../../../src/app/shared/Selectedrecipe.Service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__("../../../http/esm5/http.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_firebase__ = __webpack_require__("../../../../firebase/index.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_firebase___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_firebase__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_Router__ = __webpack_require__("../../../Router/esm5/router.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__Selectedrecipe_Service__ = __webpack_require__("../../../../../src/app/shared/Selectedrecipe.Service.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1119,46 +1121,71 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
 var AuthService = (function () {
-    function AuthService(router, selservice) {
+    // http://localhost:8080 http://192.168.99.100:58080 http://wildfly:80
+    function AuthService(router, selservice, http) {
         this.router = router;
         this.selservice = selservice;
+        this.http = http;
         this.token = '';
+        this.currenthost = "http://localhost:8080";
     }
     AuthService.prototype.signUpUser = function (email, name) {
-        __WEBPACK_IMPORTED_MODULE_1_firebase__["auth"]().createUserWithEmailAndPassword(email, name)
+        __WEBPACK_IMPORTED_MODULE_2_firebase__["auth"]().createUserWithEmailAndPassword(email, name)
             .catch(function (error) { return console.log(error); });
     };
-    AuthService.prototype.signInUser = function (email, name) {
+    AuthService.prototype.signInServer = function (email, name) {
         var _this = this;
-        __WEBPACK_IMPORTED_MODULE_1_firebase__["auth"]().signInWithEmailAndPassword(email, name)
-            .then(function (response) {
-            __WEBPACK_IMPORTED_MODULE_1_firebase__["auth"]().currentUser.getToken()
-                .then(function (token) {
-                _this.token = token; // в этот момент пришёл токен
+        var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["a" /* Headers */]({
+            'Content-Type': 'text/plain',
+            'Accept': 'text/plain',
+        });
+        var acoountData = email + name;
+        this.http.post(this.currenthost + '/mavenweb1-1.0-SNAPSHOT/rest/login', acoountData, { headers: headers })
+            .subscribe(function (resp) {
+            _this.token = resp.headers.get('Authorization'); // в этот момент пришёл токен   
+            console.log(resp.headers.get('Authorization'));
+            if (_this.token === null) {
+                console.log(_this.token);
+                _this.token = '';
+            }
+            if (_this.token !== '') {
                 _this.selservice.selectedRecipieind = undefined;
                 _this.router.navigate(['/catalogue/edit']);
-            });
-        })
-            .catch(function (error) { return console.log(error); });
+            }
+        });
     };
+    /**
+        signInUser(email:string, name:string){   //аутентификация на firebase - старая
+            firebase.auth().signInWithEmailAndPassword(email,name)
+            .then( response=>{
+                firebase.auth().currentUser.getToken()
+                .then((token:string)=>{this.token=token;  // в этот момент пришёл токен
+                this.selservice.selectedRecipieind=undefined;
+                this.router.navigate(['/catalogue/edit']);}
+                );
+            } )
+            .catch(error=>console.log(error))
+        }
+     */
     AuthService.prototype.getToken = function () {
-        var _this = this;
-        __WEBPACK_IMPORTED_MODULE_1_firebase__["auth"]().currentUser.getToken()
-            .then(function (token) { return _this.token = token; });
+        //    firebase.auth().currentUser.getToken()
+        //    .then((token:string)=>this.token=token)
         return this.token;
     };
     AuthService.prototype.isAuthenticated = function () {
         return this.token !== '';
     };
     AuthService.prototype.LogOut = function () {
-        __WEBPACK_IMPORTED_MODULE_1_firebase__["auth"]().signOut();
+        //    firebase.auth().signOut();
         this.token = '';
     };
     AuthService = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["A" /* Injectable */])(),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_2__angular_Router__["b" /* Router */],
-            __WEBPACK_IMPORTED_MODULE_3__Selectedrecipe_Service__["a" /* SelectedrecipeService */]])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_3__angular_Router__["b" /* Router */],
+            __WEBPACK_IMPORTED_MODULE_4__Selectedrecipe_Service__["a" /* SelectedrecipeService */],
+            __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */]])
     ], AuthService);
     return AuthService;
 }());
@@ -1277,37 +1304,65 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 var ShopingHttpService = (function () {
+    // http://localhost:8080 http://192.168.99.100:58080 http://wildfly:8080
     function ShopingHttpService(http, selservice, authservice, cartservice) {
         this.http = http;
         this.selservice = selservice;
         this.authservice = authservice;
         this.cartservice = cartservice;
+        this.currenthost = "http://localhost:8080";
     }
     ShopingHttpService.prototype.storerecipies = function () {
-        return this.http.put('https://shoping-center-4dda1.firebaseio.com/recipies.json?auth='
-            + this.authservice.getToken(), this.selservice.getrecipes());
+        //       return this.http.put('https://shoping-center-4dda1.firebaseio.com/recipies.json?auth='
+        //                            +this.authservice.getToken()
+        //       ,this.selservice.getrecipes());
+        var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["a" /* Headers */]({ 'Content-Type': 'application/json' });
+        console.log(this.authservice.getToken());
+        return this.http.put(this.currenthost + '/mavenweb1-1.0-SNAPSHOT/rest/recipies/all?auth='
+            + this.authservice.getToken(), this.selservice.getrecipes(), { headers: headers });
     };
     ShopingHttpService.prototype.getrecipies = function () {
+        var _this = this;
         //    this.http.get('https://shoping-center-4dda1.firebaseio.com/recipies.json')
         //            .subscribe((response:Response)=>{
         //                const recipies:Recipe[]=response.json();
         //                this.selservice.setrecipes(recipies)}
         //            );
-        var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["a" /* Headers */]({ 'Accept': 'application/json', 'CrossDomain': 'true', 'Access-Control-Allow-Origin': 'http://localhost:8080' });
-        this.http.get('http://localhost:8080/mavenweb1-1.0-SNAPSHOT/rest/recipies/all', { headers: headers })
+        var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["a" /* Headers */]({
+            'Accept': 'application/json'
+        });
+        this.http.get(this.currenthost + '/mavenweb1-1.0-SNAPSHOT/rest/recipies/all', { headers: headers })
             .subscribe(function (response) {
-            var recipies1 = response.text();
-            console.log(recipies1);
+            var recipies = response.json();
+            _this.selservice.setrecipes(recipies);
         });
     };
     ShopingHttpService.prototype.storeCart = function (cartrecipieam, totalprice, name, email, sex) {
-        var cart = new __WEBPACK_IMPORTED_MODULE_5__orders_list_cart_model__["a" /* Cart */](name, email, sex, cartrecipieam, totalprice);
-        return this.http.post('https://shoping-center-4dda1.firebaseio.com/carts.json', cart);
+        var cart = new __WEBPACK_IMPORTED_MODULE_5__orders_list_cart_model__["a" /* Cart */](name, email, sex, cartrecipieam, totalprice, null);
+        var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["a" /* Headers */]({
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        });
+        return this.http.post(this.currenthost + '/mavenweb1-1.0-SNAPSHOT/rest/cart/new', cart, { headers: headers });
     };
     ShopingHttpService.prototype.getCarts = function () {
         var _this = this;
-        this.http.get('https://shoping-center-4dda1.firebaseio.com/carts.json?auth='
-            + this.authservice.getToken())
+        /** this.http.get('https://shoping-center-4dda1.firebaseio.com/carts.json?auth='
+         +this.authservice.getToken())
+                 .subscribe((response:Response)=>{
+                     const cartsmix:any[]=response.json();
+                     let carts:Cart[]=[];
+                     for (let index in cartsmix) {
+                         carts.push((cartsmix[index])); }
+                         this.cartservice.setCarts(carts.slice());
+                     }
+                 );
+         */
+        var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["a" /* Headers */]({
+            'Accept': 'application/json'
+        });
+        this.http.get(this.currenthost + '/mavenweb1-1.0-SNAPSHOT/rest/cart/all?auth='
+            + this.authservice.getToken(), { headers: headers })
             .subscribe(function (response) {
             var cartsmix = response.json();
             var carts = [];
@@ -1318,8 +1373,12 @@ var ShopingHttpService = (function () {
         });
     };
     ShopingHttpService.prototype.storeCarts = function () {
-        return this.http.put('https://shoping-center-4dda1.firebaseio.com/carts.json?auth='
-            + this.authservice.getToken(), this.cartservice.getCarts());
+        /**return this.http.put('https://shoping-center-4dda1.firebaseio.com/carts.json?auth='
+                     +this.authservice.getToken(), this.cartservice.getCarts());  */
+        var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["a" /* Headers */]({ 'Content-Type': 'application/json' });
+        console.log(this.authservice.getToken());
+        return this.http.put(this.currenthost + '/mavenweb1-1.0-SNAPSHOT/rest/cart/all?auth='
+            + this.authservice.getToken(), this.cartservice.getCarts(), { headers: headers });
     };
     ShopingHttpService = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["A" /* Injectable */])(),
@@ -1400,9 +1459,11 @@ var ShopingListComponent = (function () {
     ShopingListComponent.prototype.onSubmit = function () {
         var _this = this;
         if (this.cartservice.amountinthecart === 0) {
-            this.authservice.signInUser(this.signupForm.value.email, this.signupForm.value.username + ' ' + this.signupForm.value.secret);
-            this.signupForm.reset();
-            this.router.navigate(['/catalogue/edit']);
+            this.authservice.signInServer(this.signupForm.value.email, this.signupForm.value.username + ' ' + this.signupForm.value.secret);
+            //  this.authservice.signInUser(this.signupForm.value.email,
+            //                              this.signupForm.value.username+' '+this.signupForm.value.secret);
+            //  this.signupForm.reset();
+            //  this.router.navigate(['/catalogue/edit']);
         }
         else {
             this.shopingHttpService.storeCart(this.cartservice.cartrecipieam, this.cartservice.totalprice, this.signupForm.value.username, this.signupForm.value.email, this.signupForm.value.secret)

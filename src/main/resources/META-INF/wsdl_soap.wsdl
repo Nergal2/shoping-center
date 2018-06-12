@@ -1,0 +1,148 @@
+<?xml version="1.0" ?>
+<wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://mavenweb1.mycompany.com/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" name="mySOAPServer" targetNamespace="http://mavenweb1.mycompany.com/">
+    <wsdl:types>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://mavenweb1.mycompany.com/" elementFormDefault="unqualified" targetNamespace="http://mavenweb1.mycompany.com/" version="1.0">
+            <xs:element name="cart" type="tns:cart"></xs:element>
+            <xs:element name="cartItem" type="tns:cartItem"></xs:element>
+            <xs:element name="getAllRecipies" type="tns:getAllRecipies"></xs:element>
+            <xs:element name="getAllRecipiesResponse" type="tns:getAllRecipiesResponse"></xs:element>
+            <xs:element name="recipe" type="tns:recipe"></xs:element>
+            <xs:element name="storeCart" type="tns:storeCart"></xs:element>
+            <xs:element name="storeCartResponse" type="tns:storeCartResponse"></xs:element>
+            <xs:element name="testServerreturn" type="tns:testServerreturn"></xs:element>
+            <xs:element name="testServerreturnResponse" type="tns:testServerreturnResponse"></xs:element>
+            <xs:complexType name="testServerreturn">
+                <xs:sequence>
+                    <xs:element name="arg0" type="xs:int"></xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="testServerreturnResponse">
+                <xs:sequence>
+                    <xs:element name="return" type="xs:int"></xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="storeCart">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="arg0" type="tns:cart"></xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="cart">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="cart" nillable="true" type="tns:cartItem"></xs:element>
+                    <xs:element minOccurs="0" name="email" type="xs:string"></xs:element>
+                    <xs:element minOccurs="0" name="name" type="xs:string"></xs:element>
+                    <xs:element minOccurs="0" name="orderId" type="xs:string"></xs:element>
+                    <xs:element name="price" type="xs:int"></xs:element>
+                    <xs:element minOccurs="0" name="sex" type="xs:string"></xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="cartItem">
+                <xs:sequence>
+                    <xs:element name="numb" type="xs:int"></xs:element>
+                    <xs:element minOccurs="0" name="rec" type="tns:recipe"></xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="recipe">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="description" type="xs:string"></xs:element>
+                    <xs:element name="id" type="xs:int"></xs:element>
+                    <xs:element minOccurs="0" name="imagepath" type="xs:string"></xs:element>
+                    <xs:element minOccurs="0" name="name" type="xs:string"></xs:element>
+                    <xs:element name="price" type="xs:int"></xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="storeCartResponse">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="return" type="tns:cart"></xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="getAllRecipies">
+                <xs:sequence></xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="getAllRecipiesResponse">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:recipe"></xs:element>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="testServerreturn">
+        <wsdl:part element="tns:testServerreturn" name="parameters">
+    </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="testServerreturnResponse">
+        <wsdl:part element="tns:testServerreturnResponse" name="parameters">
+    </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="getAllRecipiesResponse">
+        <wsdl:part element="tns:getAllRecipiesResponse" name="parameters">
+    </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="storeCart">
+        <wsdl:part element="tns:storeCart" name="parameters">
+    </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="getAllRecipies">
+        <wsdl:part element="tns:getAllRecipies" name="parameters">
+    </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="storeCartResponse">
+        <wsdl:part element="tns:storeCartResponse" name="parameters">
+    </wsdl:part>
+    </wsdl:message>
+    <wsdl:portType name="SOAPServer">
+        <wsdl:operation name="testServerreturn">
+            <wsdl:input message="tns:testServerreturn" name="testServerreturn">
+    </wsdl:input>
+            <wsdl:output message="tns:testServerreturnResponse" name="testServerreturnResponse">
+    </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="storeCart">
+            <wsdl:input message="tns:storeCart" name="storeCart">
+    </wsdl:input>
+            <wsdl:output message="tns:storeCartResponse" name="storeCartResponse">
+    </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getAllRecipies">
+            <wsdl:input message="tns:getAllRecipies" name="getAllRecipies">
+    </wsdl:input>
+            <wsdl:output message="tns:getAllRecipiesResponse" name="getAllRecipiesResponse">
+    </wsdl:output>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="mySOAPServerSoapBinding" type="tns:SOAPServer">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"></soap:binding>
+        <wsdl:operation name="testServerreturn">
+            <soap:operation soapAction="" style="document"></soap:operation>
+            <wsdl:input name="testServerreturn">
+                <soap:body use="literal"></soap:body>
+            </wsdl:input>
+            <wsdl:output name="testServerreturnResponse">
+                <soap:body use="literal"></soap:body>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="storeCart">
+            <soap:operation soapAction="" style="document"></soap:operation>
+            <wsdl:input name="storeCart">
+                <soap:body use="literal"></soap:body>
+            </wsdl:input>
+            <wsdl:output name="storeCartResponse">
+                <soap:body use="literal"></soap:body>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getAllRecipies">
+            <soap:operation soapAction="" style="document"></soap:operation>
+            <wsdl:input name="getAllRecipies">
+                <soap:body use="literal"></soap:body>
+            </wsdl:input>
+            <wsdl:output name="getAllRecipiesResponse">
+                <soap:body use="literal"></soap:body>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="mySOAPServer">
+        <wsdl:port binding="tns:mySOAPServerSoapBinding" name="SOAPServerPort">
+            <soap:address location="http://localhost:8080/mavenweb1-1.0-SNAPSHOT/mySOAPServer"></soap:address>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

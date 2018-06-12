@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+ <definitions 
+ xmlns="http://schemas.xmlsoap.org/wsdl/" 
+ xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+ xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+ xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" name="mySOAPServer" targetNamespace="http://mavenweb1.mycompany.com/" xmlns:tns="http://mavenweb1.mycompany.com/" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:wsp1="http://www.w3.org/ns/ws-policy" xmlns:fi="http://java.sun.com/xml/ns/wsit/2006/09/policy/fastinfoset/service" xmlns:tcp="http://java.sun.com/xml/ns/wsit/2006/09/policy/soaptcp/service" xmlns:wsaw="http://www.w3.org/2005/08/addressing" xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy" xmlns:sc="http://schemas.sun.com/2006/03/wss/server" xmlns:wspp="http://java.sun.com/xml/ns/wsit/policy" xmlns:sp1="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702" 
+ >
+    <message name="testServerreturn"/>
+    <message name="testServerreturnResponse"/>
+    <message name="getAllRecipies"/>
+    <message name="getAllRecipiesResponse"/>
+    <message name="storeCart"/>
+    <message name="storeCartResponse"/>
+    <message name="getAllCarts"/>
+    <message name="getAllCartsResponse"/>
+    <portType name="SOAPServer">
+        <operation name="testServerreturn">
+            <input message="tns:testServerreturn"/>
+            <output message="tns:testServerreturnResponse"/>
+        </operation>
+        <operation name="getAllRecipies">
+            <input message="tns:getAllRecipies"/>
+            <output message="tns:getAllRecipiesResponse"/>
+        </operation>
+        <operation name="storeCart">
+            <input message="tns:storeCart"/>
+            <output message="tns:storeCartResponse"/>
+        </operation>
+        <operation name="getAllCarts">
+            <input message="tns:getAllCarts"/>
+            <output message="tns:getAllCartsResponse"/>
+        </operation>
+    </portType>
+    <binding name="SOAPServerPortBinding" type="tns:SOAPServer">
+        <wsp:PolicyReference URI="#SOAPServerPortBindingPolicy"/>
+        <operation name="testServerreturn">
+            <input></input>
+            <output></output>
+        </operation>
+        <operation name="getAllRecipies">
+            <input></input>
+            <output></output>
+        </operation>
+        <operation name="storeCart">
+            <input></input>
+            <output></output>
+        </operation>
+        <operation name="getAllCarts">
+            <input></input>
+            <output></output>
+        </operation>
+    </binding>
+    <service name="mySOAPServer">
+        <port name="SOAPServerPort" binding="tns:SOAPServerPortBinding"/>
+    </service>
+    <wsp:Policy wsu:Id="SOAPServerPortBindingPolicy">
+        <wsp:ExactlyOne>
+            <wsp:All>
+                <wsaw:UsingAddressing xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl"/>
+                <sc:ValidatorConfiguration wspp:visibility="private">
+                    <sc:Validator name="usernameValidator" classname="validators.DerivedKeyPasswordValidator"/>
+                </sc:ValidatorConfiguration>
+            </wsp:All>
+        </wsp:ExactlyOne>
+    </wsp:Policy>
+</definitions>

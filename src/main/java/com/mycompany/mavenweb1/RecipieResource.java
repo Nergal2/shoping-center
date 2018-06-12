@@ -11,6 +11,7 @@ import com.mycompany.mavenweb1.entity.CartItem;
 import com.mycompany.mavenweb1.entity.Cartdb;
 import com.mycompany.mavenweb1.entity.Cartrecipedb;
 import com.mycompany.mavenweb1.entity.Recipe;
+import com.mycompany.soapclient.SoapClient;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
@@ -26,7 +27,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
-
+ 
 /**
  * Обрабатывает rest запросы
  * @author Администратор
@@ -35,6 +36,9 @@ import sun.misc.BASE64Encoder;
 public class RecipieResource {
     @Inject
     private RecipieDataAccessImpl rdai;
+    
+    @Inject
+    private SoapClient soapclient;
     
 /** Логгер */
     @Inject
@@ -83,8 +87,9 @@ public class RecipieResource {
     @Path("/recipies/all")
     //@Produces({MediaType.APPLICATION_JSON,MediaType.APPLICATION_XML})
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Recipe> getAllRecipies(){
-        List<Recipe> lst= rdai.getRecipies(); 
+    public List<Recipe> getAllRecipies() throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException{
+        List<Recipe> lst= rdai.getRecipies();
+        lst.addAll(soapclient.getRecipiesSoap());
         logger.log( Level.INFO, "Recipies list's been requested");
         return lst;
     }

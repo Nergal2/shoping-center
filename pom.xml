@@ -11,10 +11,17 @@
 
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
+        <basedir>D:/work/java/mavenweb1</basedir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     
     <dependencies>
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.6</version>
+            <type>jar</type>
+        </dependency>
         <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-web-api</artifactId>
@@ -60,6 +67,19 @@
             <type>jar</type>
             <scope>provided</scope>            
         </dependency>
+        
+        <!-- log4j support -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>2.11.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>2.11.0</version>
+        </dependency>
+        
         <!--dependency>
             <groupId>commons-fileupload</groupId>
             <artifactId>commons-fileupload</artifactId>
@@ -83,6 +103,47 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.10</version>
+        </dependency>
+	<dependency>
+	    <groupId>com.sun.xml.ws</groupId>
+            <artifactId>jaxws-rt</artifactId>
+             <version>2.2.8</version>
+        </dependency>  
+ <!--        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-frontend-jaxws</artifactId>
+            <version>3.1.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-transports-http</artifactId>
+            <version>3.1.6</version>
+        </dependency>      -->  
+        <dependency>
+            <groupId>com.sun.xml.messaging.saaj</groupId>
+            <artifactId>saaj-impl</artifactId>
+            <version>1.4.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jvnet.staxex</groupId>
+            <artifactId>stax-ex</artifactId>
+            <version>1.7.8</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.0</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.jboss.weld</groupId>
+            <artifactId>weld-core</artifactId>
+            <version>2.4.7.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.weld</groupId>
+            <artifactId>weld-spi</artifactId>
+            <version>3.0.SP2</version>
         </dependency>
 
     </dependencies>
@@ -134,7 +195,68 @@
                     </execution>
                 </executions>
             </plugin>
+        <!-- reading wsdl --> 
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.9</version>
+                <executions>
+                    <execution>
+                        <id>add-source</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${basedir}/target/generated/src/main/java</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxws-maven-plugin</artifactId>
+                <version>1.12</version>
+                <configuration>
+                <!--     <wsdlDirectory>${basedir}/src/main/resources/wsdl</wsdlDirectory> --> 
+            <!--from URL        <wsdlUrls> 
+                        <wsdlUrl>http://localhost:1234/recipielist?wsdl</wsdlUrl>
+                    </wsdlUrls>
+            -->         
+                    <wsdlFiles>
+                        <wsdlFile>SoapWsdlRecipies.xml</wsdlFile>
+                    </wsdlFiles>
+                    <packageName>wsdl</packageName>
+                    <wsdlLocation>http://localhost:1234/recipielist?wsdl</wsdlLocation>
+                    <keep>true</keep>
+                    <sourceDestDir>${basedir}/target/generated/src/main/java</sourceDestDir>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>wsimport</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
+        
+        <resources>
+        <!-- regular resource processsing for everything -->
+        <resource>
+            <directory>src/main/resources</directory>
+        </resource>
+        <!-- resource processsing with a different output directory
+             for Item2Recipe.xsl -->
+        <resource>
+            <directory>src/main/resources</directory>
+            <includes>
+                <include>Item2Recipe.xsl</include>
+            </includes>
+        </resource>
+        </resources>
     </build>
 
 </project>
