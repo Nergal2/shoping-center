@@ -23,6 +23,13 @@
             <type>jar</type>
         </dependency>
         <dependency>
+            <groupId>org.hibernate.javax.persistence</groupId>
+            <artifactId>hibernate-jpa-2.0-api</artifactId>
+            <version>1.0.0.Final</version>
+            <type>jar</type>
+        </dependency>
+			<!-- CDI: -->
+        <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-web-api</artifactId>
             <version>7.0</version>
@@ -93,6 +100,7 @@
             <type>jar</type>
             <scope>provided</scope>
         </dependency>-->
+    <!-- testing support -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
@@ -104,6 +112,7 @@
             <artifactId>junit</artifactId>
             <version>4.10</version>
         </dependency>
+    <!-- xml jax-ws support -->
 	<dependency>
 	    <groupId>com.sun.xml.ws</groupId>
             <artifactId>jaxws-rt</artifactId>
@@ -119,6 +128,7 @@
             <artifactId>cxf-rt-transports-http</artifactId>
             <version>3.1.6</version>
         </dependency>      -->  
+                <!-- xml support -->
         <dependency>
             <groupId>com.sun.xml.messaging.saaj</groupId>
             <artifactId>saaj-impl</artifactId>
@@ -134,7 +144,7 @@
             <artifactId>commons-lang3</artifactId>
             <version>3.0</version>
         </dependency>
-        
+                <!-- dom4j.DocumentFactory support  -->
         <dependency>
             <groupId>org.jboss.weld</groupId>
             <artifactId>weld-core</artifactId>
@@ -144,7 +154,19 @@
             <groupId>org.jboss.weld</groupId>
             <artifactId>weld-spi</artifactId>
             <version>3.0.SP2</version>
-        </dependency>
+        </dependency>  
+        
+        <!-- hibernate annotations support
+  	<dependency>
+  		<groupId>org.hibernate</groupId>
+  		<artifactId>hibernate-core</artifactId>
+  		<version>4.3.6.Final</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.hibernate</groupId>
+  		<artifactId>hibernate-annotations</artifactId>
+  		<version>3.5.6-Final</version>
+  	</dependency> -->
 
     </dependencies>
 

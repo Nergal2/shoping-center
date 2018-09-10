@@ -17,9 +17,9 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
-import wsdl.Item;
-import wsdl.MySOAPServer;
-import wsdl.SOAPServer;
+import wsdlsaved.Item;
+import wsdlsaved.MySOAPServer;
+import wsdlsaved.SOAPServer;
  
 /**
  *

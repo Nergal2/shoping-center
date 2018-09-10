@@ -23,8 +23,8 @@ import javax.transaction.Transactional;
  * Обрабатывает запросы в БД
  * @author Администратор
  */
- @Stateless
-//@Transactional // не нужна для EJB
+//@Stateless
+@Transactional // не нужна для EJB
 public class RecipieDataAccessImpl {
     @PersistenceContext(unitName = "example2PU")
     EntityManager em;
