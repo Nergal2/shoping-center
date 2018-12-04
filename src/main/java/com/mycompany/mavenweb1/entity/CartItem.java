@@ -18,18 +18,19 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 public class CartItem implements Serializable {
- //   @Id
+    //   @Id
+
     @Basic(optional = false)
- //   @NotNull
+    //   @NotNull
 //    @Column(name = "rec")
-    private Recipe rec; 
-    
- //   @Id
+    private Recipe rec;
+
+    //   @Id
     @Basic(optional = false)
- //   @NotNull
+    //   @NotNull
 //    @Column(name = "numb")
-    private int numb;  
-    
+    private int numb;
+
     public CartItem() {
     }
 

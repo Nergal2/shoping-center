@@ -23,33 +23,33 @@ import javax.ws.rs.core.MediaType;
 @Path("/rest/gate")
 @Stateless
 public class Rest {
-    
+
     @PersistenceContext(unitName = "example2PU")
     EntityManager em;
-    
+
     @GET
     @Path("/echo")
     public String echo(@QueryParam("q") String original) {
         return original;
     }
-    
-   @GET
+
+    @GET
     @Path("/echo2")
     public String echo() {
         return "smth recipie";
-    }  
-    
+    }
+
     @POST
-    @Path("/testEM")        
-    public String testEm(){
+    @Path("/testEM")
+    public String testEm() {
         String result = "none";
-        if (em != null){
-           result = "not null";
-            Employee e1=new Employee("Milana569",100);
+        if (em != null) {
+            result = "not null";
+            Employee e1 = new Employee("Milana569", 100);
             em.persist(e1);
             Query q = em.createQuery("select employee from Employee employee where employee.name = :name");
-	    q.setParameter("name", "Sarah");
-	    result= q.getResultList().toString();
+            q.setParameter("name", "Sarah");
+            result = q.getResultList().toString();
         }
         return result;
     }

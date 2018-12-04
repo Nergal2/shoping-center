@@ -20,37 +20,41 @@ import javax.ws.rs.core.Response;
  * @author Администратор
  */
 public class RecipeClient {
+
     private Client client;
-    public RecipeClient(){
+
+    public RecipeClient() {
         client = ClientBuilder.newClient();
     }
-    
-    public List<Recipe> getRecipies (){
+
+    public List<Recipe> getRecipies() {
         WebTarget target = client.target("http://localhost:8080/mavenweb1-1.0-SNAPSHOT/");
 
         String response2 = target.path("rest/recipies/all").request(MediaType.APPLICATION_JSON)
-                .get(String.class);         
+                .get(String.class);
         System.out.println(response2);
-        
-     //   List<Recipe> response = target.path("rest/recipies/all").request(MediaType.APPLICATION_JSON)
-     //           .get(new GenericType<List<Recipe>>(){});
-          Response response = target.path("rest/recipies/all").request(MediaType.APPLICATION_JSON)
+
+        //   List<Recipe> response = target.path("rest/recipies/all").request(MediaType.APPLICATION_JSON)
+        //           .get(new GenericType<List<Recipe>>(){});
+        Response response = target.path("rest/recipies/all").request(MediaType.APPLICATION_JSON)
                 .get(Response.class);
-        if (response.getStatus()!=200){
-            throw new RuntimeException(response.getStatus()+ " There was an error ");        
+        if (response.getStatus() != 200) {
+            throw new RuntimeException(response.getStatus() + " There was an error ");
         }
-        
-        return response.readEntity(new GenericType<List<Recipe>>(){});
+
+        return response.readEntity(new GenericType<List<Recipe>>() {
+        });
     }
-    
-        public List<Cart> getCarts (){
+
+    public List<Cart> getCarts() {
         WebTarget target = client.target("http://localhost:8080/mavenweb1-1.0-SNAPSHOT/");
         List<Cart> response = target.path("rest/cart/all").request(MediaType.APPLICATION_JSON)
-                .get(new GenericType<List<Cart>>(){});
+                .get(new GenericType<List<Cart>>() {
+                });
         String response2 = target.path("rest/cart/all").request(MediaType.APPLICATION_JSON)
                 .get(String.class);
         System.out.println(response2);
         return response;
     }
-        
+
 }

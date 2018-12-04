@@ -25,45 +25,47 @@ import javax.xml.bind.annotation.XmlRootElement;
 //@Table(name = "cart")
 public class Cart implements Serializable {
 //    @Id
+
     @Basic(optional = false)
 //    @NotNull
 //    @Column(name = "name")
-    private String name; 
-    
+    private String name;
+
 //    @Id
     @Basic(optional = false)
 //    @NotNull
 //    @Column(name = "email")
-    private String email;     
+    private String email;
 
     @Basic(optional = false)
 //    @NotNull
 //    @Column(name = "sex")
-    private String sex;    
-    
+    private String sex;
+
     @Basic(optional = true)
 //    @NotNull
 //    @Column(name = "cart") 
-    private CartItem[] cart;   
-    
+    private CartItem[] cart;
+
     @Basic(optional = false)
 //    @NotNull
 //    @Column(name = "price")
-    private int price; 
-    
+    private int price;
+
     @Basic(optional = true)
     private String orderId;
 
     public Cart() {
     }
-    public Cart( String name,String email,String sex,int price,String orderId) {
-        this.name=name;
-        this.email=email;
-        this.sex=sex;
-        this.price=price;
-        this.orderId=orderId;
+
+    public Cart(String name, String email, String sex, int price, String orderId) {
+        this.name = name;
+        this.email = email;
+        this.sex = sex;
+        this.price = price;
+        this.orderId = orderId;
     }
-        
+
     public String getName() {
         return name;
     }
@@ -103,7 +105,7 @@ public class Cart implements Serializable {
     public void setPrice(int price) {
         this.price = price;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -131,5 +133,5 @@ public class Cart implements Serializable {
     public void setOrderId(String orderId) {
         this.orderId = orderId;
     }
-    
+
 }

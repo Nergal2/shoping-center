@@ -26,39 +26,40 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "recipe")
 //@Access(AccessType.PROPERTY)
 public class Recipe implements Serializable {
+
     @Id
     @Basic(optional = false)
     @NotNull
     @Column(name = "id")
     private int id;
-    
+
     @Basic(optional = false)
     @NotNull
     @Column(name = "name")
-    private String name; 
-    
+    private String name;
+
     @Basic(optional = false)
     @NotNull
-    @Column(name = "price")    
+    @Column(name = "price")
     private int price;
-    
+
     @Basic(optional = false)
     @Column(name = "description")
-    private String  description; 
-    
+    private String description;
+
     @Basic(optional = false)
-    @Column(name = "imagepath")    
+    @Column(name = "imagepath")
     private String imagepath;
-    
+
     public Recipe() {
     }
-    
+
     public Recipe(int id, String name, int price) {
         this.id = id;
-        this.name=name;
-        this.price=price;
+        this.name = name;
+        this.price = price;
     }
-    
+
     public int getId() {
         return id;
     }
@@ -117,6 +118,6 @@ public class Recipe implements Serializable {
             return false;
         }
         return true;
-    }    
-    
+    }
+
 }

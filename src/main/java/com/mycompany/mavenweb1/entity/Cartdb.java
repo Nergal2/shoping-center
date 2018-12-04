@@ -24,34 +24,34 @@ import javax.validation.constraints.NotNull;
  */
 @Entity //(name = "cartdb")
 @Table(name = "cartdb")
-public class Cartdb implements Serializable{
-    
+public class Cartdb implements Serializable {
+
     @NotNull
     @Column(name = "name")
-    private String name; 
-    
+    private String name;
+
     @NotNull
     @Column(name = "email")
-    private String email;     
+    private String email;
 
     @NotNull
     @Column(name = "sex")
-    private String sex;    
-    
+    private String sex;
+
     @NotNull
     @Column(name = "price")
-    private int price; 
+    private int price;
 
     @Id
     @NotNull
     @Column(name = "orderid")
     private int orderid;
-    
+
     @NotNull
     @OneToMany(targetEntity = Cartrecipedb.class, cascade = CascadeType.PERSIST)
-    
-    private Set<Cartrecipedb> cartrecipedb=new HashSet<>();
-    
+
+    private Set<Cartrecipedb> cartrecipedb = new HashSet<>();
+
     public String getName() {
         return name;
     }
@@ -91,18 +91,18 @@ public class Cartdb implements Serializable{
     public void setOrderid(int orderid) {
         this.orderid = orderid;
     }
-    
+
     public Cartdb() {
     }
-    
-    public Cartdb(String name, int price, String email, String sex,int orderid) {
-        this.name=name;
-        this.price=price;
-        this.email=email;
-        this.sex=sex;
-        this.orderid=orderid;
+
+    public Cartdb(String name, int price, String email, String sex, int orderid) {
+        this.name = name;
+        this.price = price;
+        this.email = email;
+        this.sex = sex;
+        this.orderid = orderid;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -121,7 +121,7 @@ public class Cartdb implements Serializable{
             return false;
         }
         return true;
-    }  
+    }
 
     public Set<Cartrecipedb> getCartrecipedb() {
         return cartrecipedb;

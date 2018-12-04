@@ -19,35 +19,36 @@ import javax.validation.constraints.NotNull;
  */
 @Entity//(name = "cartrecipedb")
 @Table(name = "cartrecipedb")
-public class Cartrecipedb implements Serializable{
+public class Cartrecipedb implements Serializable {
+
     @Id
     @NotNull
     @Column(name = "orderid")
     private int orderid;
-    
+
     @Id
     @NotNull
     @Column(name = "id")
     private int id;
-    
+
     @NotNull
     @Column(name = "name")
-    private String name; 
-    
+    private String name;
+
     @NotNull
     @Column(name = "price")
     private int price;
 
     @Column(name = "description")
-    private String  description; 
+    private String description;
 
-    @Column(name = "imagepath")    
+    @Column(name = "imagepath")
     private String imagepath;
-    
+
     @NotNull
     @Column(name = "numb")
     private int numb;
-    
+
     public Cartrecipedb() {
     }
 
@@ -106,7 +107,7 @@ public class Cartrecipedb implements Serializable{
     public void setNumb(int numb) {
         this.numb = numb;
     }
-    
+
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set

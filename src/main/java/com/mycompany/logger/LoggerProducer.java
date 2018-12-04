@@ -15,11 +15,11 @@ import org.apache.logging.log4j.Logger;
  * @author Nergal
  */
 public class LoggerProducer {
-    
+
     @Produces
     @LoggerAnotation
-    private Logger producerLogger(InjectionPoint ip){
+    private Logger producerLogger(InjectionPoint ip) {
         return LogManager.getLogger(ip.getMember().getDeclaringClass().getName());
-    } 
-    
+    }
+
 }

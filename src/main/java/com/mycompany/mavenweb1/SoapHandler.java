@@ -23,15 +23,17 @@ import org.apache.commons.lang.StringEscapeUtils;
  * @author Nergal
  */
 public class SoapHandler implements SOAPHandler {
+
     public boolean handleMessage(SOAPMessageContext context) {
-        Boolean outbound = (Boolean)context.get(MessageContext.MESSAGE_OUTBOUND_PROPERTY);
+        Boolean outbound = (Boolean) context.get(MessageContext.MESSAGE_OUTBOUND_PROPERTY);
         if (outbound) {
             try {
                 context.getMessage().setProperty(SOAPMessage.CHARACTER_SET_ENCODING, "UTF-8");
-        } catch (SOAPException ex) {}
+            } catch (SOAPException ex) {
+            }
+        }
+        return true;
     }
-    return true;
-}
 
     @Override
     public Set getHeaders() {
@@ -41,23 +43,23 @@ public class SoapHandler implements SOAPHandler {
     @Override
     public boolean handleMessage(MessageContext c) {
         System.out.println("HandlerValidator on server side");
-        Boolean outbound = (Boolean)c.get(MessageContext.MESSAGE_OUTBOUND_PROPERTY);
+        Boolean outbound = (Boolean) c.get(MessageContext.MESSAGE_OUTBOUND_PROPERTY);
         if (outbound) {
             try {
                 System.out.println("Server : doing stuff");
-              //  ((SOAPMessageContext)c).getMessage().setProperty(SOAPMessage.CHARACTER_SET_ENCODING, "UTF-8");
-                SOAPMessage soapm = ((SOAPMessageContext)c).getMessage();
-              //  soapm.setProperty(SOAPMessage.CHARACTER_SET_ENCODING, "UTF-8");
-              //  soapm.getSOAPBody().setEncodingStyle("UTF-8");
-                String s = new String(soapm.getSOAPBody().getTextContent().getBytes(),"UTF-8");
+                //  ((SOAPMessageContext)c).getMessage().setProperty(SOAPMessage.CHARACTER_SET_ENCODING, "UTF-8");
+                SOAPMessage soapm = ((SOAPMessageContext) c).getMessage();
+                //  soapm.setProperty(SOAPMessage.CHARACTER_SET_ENCODING, "UTF-8");
+                //  soapm.getSOAPBody().setEncodingStyle("UTF-8");
+                String s = new String(soapm.getSOAPBody().getTextContent().getBytes(), "UTF-8");
                 String s2 = StringEscapeUtils.unescapeXml(soapm.getSOAPBody().getTextContent());
-                System.out.println("orig "+soapm.getSOAPBody().getTextContent());
-                System.out.println("S "+s);
-                System.out.println("S2 "+s2);
-            //    soapm.getSOAPBody().setTextContent(s);
-            //    ((SOAPMessageContext)c).setMessage(soapm);
+                System.out.println("orig " + soapm.getSOAPBody().getTextContent());
+                System.out.println("S " + s);
+                System.out.println("S2 " + s2);
+                //    soapm.getSOAPBody().setTextContent(s);
+                //    ((SOAPMessageContext)c).setMessage(soapm);
             } catch (SOAPException ex) {
-          //      Logger.getLogger(SoapHandler.class.getName()).log(Level.SEVERE, null, ex);
+                //      Logger.getLogger(SoapHandler.class.getName()).log(Level.SEVERE, null, ex);
                 System.out.println(ex.getMessage());
             } catch (UnsupportedEncodingException ex) {
                 System.out.println(ex.getMessage());
